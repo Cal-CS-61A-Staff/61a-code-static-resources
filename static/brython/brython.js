@@ -105,8 +105,8 @@ new Function("$locals_script",js)({})}})(__BRYTHON__)
 __BRYTHON__.implementation=[3,9,1,'final',0]
 __BRYTHON__.__MAGIC__="3.9.1"
 __BRYTHON__.version_info=[3,9,0,'final',0]
-__BRYTHON__.compiled_date="2021-03-11 21:35:09.815231"
-__BRYTHON__.timestamp=1615494909815
+__BRYTHON__.compiled_date="2021-03-17 22:13:39.180770"
+__BRYTHON__.timestamp=1616015619180
 __BRYTHON__.builtin_module_names=["_aio","_ajax","_base64","_binascii","_cmath","_io_classes","_json","_jsre","_locale","_multiprocessing","_posixsubprocess","_profile","_sre1","_sre_utils","_string","_strptime","_svg","_webcomponent","_webworker","_zlib_utils","array","bry_re","builtins","dis","encoding_cp932","hashlib","html_parser","long_int","marshal","math","modulefinder","posix","python_re","random","unicodedata"]
 ;
 
@@ -2675,9 +2675,9 @@ this.type='func_arg_id'
 this.name=name
 this.parent=C
 if(C.has_star_arg){C.parent.after_star.push(name)}else{C.parent.positional_list.push(name)}
-var node=$get_node(this)
+if(C.parent.type !="lambda"){var node=$get_node(this)
 if(node.binding[name]){$_SyntaxError(C,["duplicate argument '"+name+"' in function definition"])}
-$bind(name,node,this)
+$bind(name,node,this)}
 this.tree=[]
 C.tree[C.tree.length]=this
 var ctx=C
@@ -2738,8 +2738,8 @@ return new $AbstractExprCtx(
 new $AnnotationCtx(C),false)}
 $_SyntaxError(C,'token '+token+' after '+C)}
 $FuncStarArgCtx.prototype.set_name=function(name){this.name=name
-if(this.node.binding[name]){$_SyntaxError(C,["duplicate argument '"+name+"' in function definition"])}
-$bind(name,this.node,this)
+if(this.parent.parent.type !="lambda"){if(this.node.binding[name]){$_SyntaxError(C,["duplicate argument '"+name+"' in function definition"])}
+$bind(name,this.node,this)}
 var ctx=this.parent
 while(ctx.parent !==undefined){if(ctx.type=='def'){ctx.locals.push(name)
 break}
@@ -3098,7 +3098,6 @@ this.args_start=$pos+6
 this.vars=[]
 this.locals=[]
 this.node=$get_node(this)
-this.node.binding={}
 this.positional_list=[]
 this.default_list=[]
 this.other_args=null
@@ -6909,7 +6908,8 @@ _locals.$is_namespace=true
 if(_globals===_b_.None && _locals===_b_.None &&
 current_frame[0]==current_frame[2]){}else{eval("$locals_"+locals_id+".$src = src")}
 var root=$B.py2js(src,globals_id,locals_id,parent_scope),js,gns,lns
-if(_globals !==_b_.None && _locals==_b_.None){for(var attr in _globals.$string_dict){root.binding[attr]=true}}
+if(_globals !==_b_.None &&
+(_locals===_b_.None ||_locals===_globals)){for(var attr in _globals.$string_dict){root.binding[attr]=true}}
 try{
 var try_node=root.children[root.children.length-2],instr=try_node.children[try_node.children.length-2]
 var type=instr.C.tree[0].type
@@ -6955,6 +6955,7 @@ if(res===undefined){return _b_.None}
 return res}catch(err){err.src=src
 err.module=globals_id
 if(err.$py_error===undefined){throw $B.exception(err)}
+if(globals_is_dict){delete _globals.$jsobj}
 throw err}finally{
 if($B.frames_stack.length==stack_len+1){$B.frames_stack.pop()}
 root=null
@@ -7739,13 +7740,12 @@ for(var j=0;j < _args.length;j++){line.push(_args[j][i])}
 items.push($B.fast_tuple(line))}
 res.items=items
 return zip_iterator.$factory(items)}
-while(1){var line=[],flag=true
-for(var i=0;i < args.length;i++){try{line.push(args[i]())}catch(err){if(err.__class__==_b_.StopIteration){flag=false
+function*iterator(args){while(true){var line=[],flag=true
+for(var i=0;i < args.length;i++){try{line.push($B.$call(args[i])())}catch(err){if(err.__class__==_b_.StopIteration){flag=false
 break}else{throw err}}}
-if(! flag){break}
-items.push($B.fast_tuple(line))}
-res.items=items
-return zip_iterator.$factory(items)}
+if(! flag){return}
+yield $B.fast_tuple(line)}}
+return $B.generator.$factory(iterator,'zip')(args)}
 )
 var zip_iterator=$B.make_iterator_class('zip')
 zip.__iter__=function(self){return zip_iterator.$factory(self.items)}
@@ -9397,7 +9397,7 @@ var pylist=['VFS_import','__future__','_abcoll','_codecs','_codecs_jp','_collect
 for(var i=0;i < pylist.length;i++){$B.stdlib[pylist[i]]=['py']}
 var js=['_aio','_ajax','_base64','_binascii','_cmath','_io_classes','_json','_jsre','_locale','_multiprocessing','_posixsubprocess','_profile','_sre1','_sre_utils','_string','_strptime','_svg','_webcomponent','_webworker','_zlib_utils','aes','array','bry_re','builtins','dis','encoding_cp932','hashlib','hmac-md5','hmac-ripemd160','hmac-sha1','hmac-sha224','hmac-sha256','hmac-sha3','hmac-sha384','hmac-sha512','html_parser','long_int','marshal','math','md5','modulefinder','pbkdf2','posix','python_re','rabbit','rabbit-legacy','random','rc4','ripemd160','sha1','sha224','sha256','sha3','sha384','sha512','tripledes','unicodedata']
 for(var i=0;i < js.length;i++){$B.stdlib[js[i]]=['js']}
-var pkglist=['browser.widgets','collections','concurrent','concurrent.futures','email','email.mime','encodings','html','http','importlib','logging','multiprocessing','multiprocessing.dummy','pydoc_data','site-packages.foobar','site-packages.simpleaio','site-packages.simpy','site-packages.simpy.resources','site-packages.ui','test','test.encoded_modules','test.leakers','test.namespace_pkgs.not_a_namespace_pkg.foo','test.support','test.test_email','test.test_importlib','test.test_importlib.builtin','test.test_importlib.extension','test.test_importlib.frozen','test.test_importlib.import_','test.test_importlib.source','test.test_json','test.tracedmodules','unittest','unittest.test','unittest.test.testmock','urllib']
+var pkglist=['browser.widgets','collections','concurrent','concurrent.futures','email','email.mime','encodings','html','http','importlib','logging','multiprocessing','multiprocessing.dummy','pydoc_data','site-packages.foobar','site-packages.pkg_resources','site-packages.pkg_resources._vendor','site-packages.pkg_resources._vendor.packaging','site-packages.pkg_resources.extern','site-packages.simpleaio','site-packages.simpy','site-packages.simpy.resources','site-packages.ui','test','test.encoded_modules','test.leakers','test.namespace_pkgs.not_a_namespace_pkg.foo','test.support','test.test_email','test.test_importlib','test.test_importlib.builtin','test.test_importlib.extension','test.test_importlib.frozen','test.test_importlib.import_','test.test_importlib.source','test.test_json','test.tracedmodules','unittest','unittest.test','unittest.test.testmock','urllib']
 for(var i=0;i < pkglist.length;i++){$B.stdlib[pkglist[i]]=['py',true]}})(__BRYTHON__)
 ;
 
@@ -12304,6 +12304,11 @@ if(res.search('"')==-1 && res.search("'")==-1){return "'"+res+"'"}else if(self.s
 var qesc=new RegExp("'","g")
 res="'"+res.replace(qesc,"\\'")+"'"
 return res}
+str.__setattr__=function(self,attr,value){if(typeof self==="string"){if(str.hasOwnProperty(attr)){throw _b_.AttributeError.$factory("'str' object attribute '"+
+attr+"' is read-only")}else{throw _b_.AttributeError.$factory(
+"'str' object has no attribute '"+attr+"'")}}
+_b_.dict.$setitem(self.__dict__,attr,value)
+return $N}
 str.__setitem__=function(self,attr,value){throw _b_.TypeError.$factory(
 "'str' object does not support item assignment")}
 var combining=[]
@@ -13374,8 +13379,8 @@ function jsobj2dict(x){var d=$B.empty_dict()
 for(var attr in x){if(attr.charAt(0)!="$" && attr !=="__class__"){if(x[attr]===null){d.$string_dict[attr]=[_b_.None,d.$order++]}else if(x[attr]===undefined){continue}else if(x[attr].$jsobj===x){d.$string_dict[attr]=[d,d.$order++]}else{d.$string_dict[attr]=[$B.$JS2Py(x[attr]),d.$order++]}}}
 return d}
 $B.obj_dict=function(obj,from_js){var klass=obj.__class__ ||$B.get_class(obj)
-if(klass !==undefined && klass.$native){throw _b_.AttributeError.$factory(klass.__name__+
-" has no attribute '__dict__'")}
+if(klass !==undefined && klass.$native){throw _b_.AttributeError.$factory("'"+$B.class_name(obj)+
+"' object has no attribute '__dict__'")}
 var res=$B.empty_dict()
 res.$jsobj=obj
 res.$from_js=from_js 
@@ -14052,8 +14057,9 @@ var bltns=$B.InjectBuiltins()
 eval(bltns)
 var $GeneratorReturn={}
 $B.generator_return=function(value){return{__class__:$GeneratorReturn,value:value}}
-$B.generator=$B.make_class("generator",function(func){var res=function(){var gen=func.apply(null,arguments)
-gen.$name=func.name
+$B.generator=$B.make_class("generator",function(func,name){
+var res=function(){var gen=func.apply(null,arguments)
+gen.$name=name ||'generator'
 gen.$func=func
 gen.$has_run=false
 gen.__class__=$B.generator
@@ -14063,10 +14069,12 @@ locals.$close_generators.push(gen)}
 return gen}
 res.$infos=func.$infos
 res.$is_genfunc=true
+res.$name=name
 return res}
 )
 $B.generator.__iter__=function(self){return self}
 $B.generator.__next__=function(self){return $B.generator.send(self,_b_.None)}
+$B.generator.__str__=function(self){return '<'+self.$name+' object>'}
 $B.generator.close=function(self){try{$B.generator.$$throw(self,_b_.GeneratorExit.$factory())}catch(err){if(! $B.is_exc(err,[_b_.GeneratorExit,_b_.StopIteration])){throw _b_.RuntimeError.$factory("generator ignored GeneratorExit")}}}
 $B.generator.send=function(self,value){
 self.$has_run=true
