@@ -9,5 +9,6 @@ This repo contains third-party resources for 61A Code. Specifically,
  - D3 (https://github.com/d3/d3, BSD-3-Clause License)
  - jQuery (https://github.com/jquery/jquery, MIT License)
  - Python Tutor (https://github.com/pgbovine/OnlinePythonTutor, MIT License) - SVG.js (https://github.com/svgdotjs/svg.js, MIT License)
+ - Dict4Schools (https://github.com/InnovativeInventor/dict4schools, Unlicense License) - safedict_full.txt --> english.txt
  
 The license notices for each of these resources is reproduced in full in the LICENSE file at the root of this repository.
